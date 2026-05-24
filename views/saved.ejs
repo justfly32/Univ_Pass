@@ -24,17 +24,22 @@
     <% } else { %>
       <div class="list-group">
         <% list.forEach(function(item) { %>
-          <a href="/saved/<%= item.id %>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-            <div>
-              <div class="fw-bold"><%= item.name %></div>
-              <div class="small text-muted">
-                <%= new Date(item.createdAt).toLocaleString('ko-KR') %>
-                · <%= item.totalUnivs %>개 학과
-                <% if (item.deptQuery) { %>· <span class="text-primary"><%= item.deptQuery %></span> 필터<% } %>
+          <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <a href="/saved/<%= item.id %>" class="text-decoration-none flex-grow-1 d-flex justify-content-between align-items-center">
+              <div>
+                <div class="fw-bold"><%= item.name %></div>
+                <div class="small text-muted">
+                  <%= new Date(item.createdAt).toLocaleString('ko-KR') %>
+                  · <%= item.totalUnivs %>개 학과
+                  <% if (item.deptQuery) { %>· <span class="text-primary"><%= item.deptQuery %></span> 필터<% } %>
+                </div>
               </div>
-            </div>
-            <span class="badge bg-primary rounded-pill">보기 →</span>
-          </a>
+              <span class="badge bg-primary rounded-pill me-2">보기 →</span>
+            </a>
+            <form method="POST" action="/saved/<%= item.id %>/delete" onsubmit="return confirm('삭제하시겠습니까?')">
+              <button type="submit" class="btn btn-sm btn-outline-danger">삭제</button>
+            </form>
+          </div>
         <% }) %>
       </div>
     <% } %>

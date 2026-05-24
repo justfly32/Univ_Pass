@@ -376,7 +376,13 @@ app.get('/saved/:id', (req, res) => {
   const filePath = path.join(SAVED_DIR, req.params.id + '.json')
   if (!fs.existsSync(filePath)) return res.redirect('/saved')
   const d = JSON.parse(fs.readFileSync(filePath, 'utf8'))
-  res.render('result', { ...d, savedId: d.id })
+  res.render('result', { ...d, savedId: d.id, admissionType: d.admissionType || '종합' })
+})
+
+app.post('/saved/:id/delete', (req, res) => {
+  const filePath = path.join(SAVED_DIR, req.params.id + '.json')
+  if (fs.existsSync(filePath)) fs.unlinkSync(filePath)
+  res.redirect('/saved')
 })
 
 app.listen(PORT, () => {
