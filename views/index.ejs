@@ -31,13 +31,16 @@
       <div class="col-lg-8">
         <div class="card shadow-sm mb-4">
           <div class="card-body p-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <h3 class="section-title mb-0">학생 정보 입력</h3>
-              <div class="btn-group btn-group-sm" role="group">
-                <a href="/?type=교과" class="btn <%= admissionType === '교과' ? 'btn-primary' : 'btn-outline-primary' %>">학생부교과</a>
-                <a href="/?type=종합" class="btn <%= admissionType === '종합' ? 'btn-primary' : 'btn-outline-primary' %>">학생부종합</a>
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="section-title mb-0" style="font-size:1.5rem;">학생 정보 입력</h2>
+                <div class="d-flex align-items-center gap-2">
+                  <a href="/saved" class="btn btn-sm btn-outline-secondary">저장 목록</a>
+                  <div class="btn-group btn-group-sm" role="group">
+                    <a href="/?type=교과" class="btn <%= admissionType === '교과' ? 'btn-primary' : 'btn-outline-primary' %>">학생부교과</a>
+                    <a href="/?type=종합" class="btn <%= admissionType === '종합' ? 'btn-primary' : 'btn-outline-primary' %>">학생부종합</a>
+                  </div>
+                </div>
               </div>
-            </div>
             <p class="small text-muted mb-3"><%= admissionType === '교과' ? '내신 성적 중심으로 평가하는 전형입니다.' : '학생부 종합 평가로 진행되는 전형입니다.' %></p>
             <form action="/analyze" method="POST" onsubmit="document.getElementById('deptQueryInput').value=document.getElementById('deptSearch').value">
               <input type="hidden" name="admission_type" value="<%= admissionType %>">
