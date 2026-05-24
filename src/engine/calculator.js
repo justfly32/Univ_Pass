@@ -62,8 +62,15 @@ function calcTotalScore(gpaScore, recordScoreNormalized, gpaWeight, recordWeight
 
 function calcProbability(userScore, cutoffScore) {
   if (cutoffScore <= 0) return 0
-  const raw = (userScore / cutoffScore) * 100
-  return Math.min(Math.round(raw * 100) / 100, 99)
+  let prob
+  if (userScore >= cutoffScore) {
+    const ratio = (userScore - cutoffScore) / cutoffScore
+    prob = 50 + 49 * (1 - Math.exp(-ratio * 6))
+  } else {
+    const ratio = (cutoffScore - userScore) / cutoffScore
+    prob = 50 * Math.exp(-ratio * 6)
+  }
+  return Math.min(Math.max(Math.round(prob * 100) / 100, 0), 99)
 }
 
 function calcGradeProbability(gpaGrade, cutoffGrade) {
@@ -71,15 +78,10 @@ function calcGradeProbability(gpaGrade, cutoffGrade) {
   if (cutoffGrade >= 9) return 50
   let prob
   if (gpaGrade <= cutoffGrade) {
-    // meets or exceeds cutoff
-    const excess = cutoffGrade - gpaGrade
-    const maxExcess = cutoffGrade - 1
-    prob = 50 + (excess / maxExcess) * 49
+    const ratio = (cutoffGrade - gpaGrade) / (cutoffGrade - 1)
+    prob = 50 + 49 * (1 - Math.exp(-ratio * 6))
   } else {
-    // below cutoff
-    const deficit = gpaGrade - cutoffGrade
-    const maxDeficit = 9 - cutoffGrade
-    prob = 50 - (deficit / maxDeficit) * 50
+    prob = 50 * Math.pow(cutoffGrade / gpaGrade, 8)
   }
   return Math.min(Math.max(Math.round(prob * 100) / 100, 0), 99)
 }
@@ -134,9 +136,9 @@ function analyze(student, univId, deptName, admissionType) {
 
   let totalScore, cutoffScore, probability
   const noRecord = dept.no_record
+  const cutoffGrade = dept.cutoff_grade || dept.cutoff_score
 
-  if (isGradeCutoff || noRecord) {
-    const cutoffGrade = dept.cutoff_score
+  if (noRecord) {
     cutoffScore = convertGradeToScore(cutoffGrade, conversionTable)
     totalScore = gpaScore
     probability = calcGradeProbability(student.gpa_grade, cutoffGrade)
@@ -145,6 +147,14 @@ function analyze(student, univId, deptName, admissionType) {
     totalScore = calcTotalScore(gpaScore, recordResult.normalized, dept.gpa_weight, dept.record_weight)
     probability = calcProbability(totalScore, cutoffScore)
   }
+
+  const gpaProbability = calcGradeProbability(student.gpa_grade, cutoffGrade)
+  const totalProbability = probability
+
+  const gpaPortion = gpaScore * dept.gpa_weight
+  const recordBoost = recordResult.normalized * dept.record_weight
+  const totalToCutoff = totalScore - cutoffScore
+  const gpaShortfall = cutoffScore - gpaScore
 
   return {
     university: univ.name,
@@ -160,9 +170,16 @@ function analyze(student, univId, deptName, admissionType) {
     cutoffIsGrade: isGradeCutoff,
     noRecord,
     probability,
+    gpaProbability: Math.round(gpaProbability * 100) / 100,
+    totalProbability: Math.round(totalProbability * 100) / 100,
     recordDetails: recordResult.details,
     gradeAdvice: getGradeAdvice(student.gpa_grade),
-    recordAdvice: getRecordAdvice(student.record_scores)
+    recordAdvice: getRecordAdvice(student.record_scores),
+    gpaShortfall: Math.round(gpaShortfall * 100) / 100,
+    recordBoost: Math.round(recordBoost * 100) / 100,
+    gpaPortion: Math.round(gpaPortion * 100) / 100,
+    totalToCutoff: Math.round(totalToCutoff * 100) / 100,
+    isCompensating: gpaShortfall > 0 && totalScore >= cutoffScore
   }
 }
 

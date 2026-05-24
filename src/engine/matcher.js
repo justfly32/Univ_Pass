@@ -13,7 +13,7 @@ function matchAll(student, admissionType) {
       const result = analyze(student, univ.id, dept.name, admissionType)
       if (result) {
         result.admissionType = dept.admission_type
-        result.cutoffRaw = dept.cutoff_score
+        result.cutoffRaw = dept.cutoff_grade || dept.cutoff_score
         result.cutoffIsGrade = !!dept.cutoff_is_grade
         result.noRecord = !!dept.no_record
         results.push(result)

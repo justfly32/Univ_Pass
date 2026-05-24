@@ -67,159 +67,192 @@
               <span class="badge bg-secondary fs-6" style="font-size:0.8rem !important;"><%= admissionType %> · <%= deptQuery ? deptQuery + ' 관련 ' : '' %>총 <%= totalUnivs %>개 학과 분석</span>
             </h4>
 
-            <% if (highProb.length > 0) { %>
+<% if (highProb.length > 0) { %>
               <div class="result-section-high mb-4">
                 <h5 class="fw-bold mb-3" style="color:var(--success);">합격 가능성이 높아요 (70% 이상)</h5>
               </div>
               <div class="table-responsive mb-4">
-                    <table class="table table-hover align-middle">
-                    <thead>
+                <table class="table table-hover align-middle">
+                  <thead>
+                    <tr>
+                      <th>대학교</th>
+                      <th>학과</th>
+                      <th>전형</th>
+                      <th>내신점수</th>
+                      <th>학생부점수</th>
+                      <th>최종점수</th>
+                      <th>내신합격컷</th>
+                      <th>내신확률</th>
+                      <th>종합점수분석</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% highProb.forEach(function(r) { %>
                       <tr>
-                        <th>대학교</th>
-                        <th>학과</th>
-                        <th>전형</th>
-                        <th>내신점수</th>
-                        <th>학생부점수</th>
-                        <th>최종점수</th>
-                        <th>합격컷</th>
-                        <th>확률</th>
-                        <th>게이지</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <% highProb.forEach(function(r) { %>
-                        <tr>
-                          <td class="fw-medium">
-                            <%= r.university %>
-                            <a href="/admin/<%= r.universityId %>" class="text-decoration-none small ms-1" title="기준 편집" style="color:var(--gray-400);">편집</a>
-                          </td>
-                          <td><%= r.department %></td>
-                          <td><span class="badge bg-secondary"><%= r.admissionType || admissionType || '종합' %></span></td>
-                          <% if (r.cutoffIsGrade) { %>
-                            <td><%= Number(student.gpa_grade).toFixed(2) %>등급</td>
-                            <td>-</td>
-                            <td><%= r.gpaScore %></td>
-                            <td><%= r.cutoffRaw %>등급</td>
-                          <% } else { %>
-                            <td><%= r.gpaScore %></td>
-                            <td><%= Math.round(r.recordScore) %></td>
-                            <td><%= r.totalScore %></td>
-                            <td><%= r.cutoffScore %></td>
-                          <% } %>
-                          <td class="fw-bold" style="color:var(--success);"><%= r.probability %>%</td>
-                          <td class="gauge-cell">
-                            <div class="progress" style="height:20px;">
-                              <div class="progress-bar bg-success" style="width:<%= Math.min(r.probability, 100) %>%"><%= Math.round(r.probability) %>%</div>
+                        <td class="fw-medium">
+                          <%= r.university %>
+                          <a href="/admin/<%= r.universityId %>" class="text-decoration-none small ms-1" title="기준 편집" style="color:var(--gray-400);">편집</a>
+                        </td>
+                        <td><%= r.department %></td>
+                        <td><span class="badge bg-secondary"><%= r.admissionType || admissionType || '종합' %></span></td>
+                        <% if (r.noRecord) { %>
+                          <td><%= Number(student.gpa_grade).toFixed(2) %>등급</td>
+                          <td>-</td>
+                          <td><%= r.gpaScore %></td>
+                          <td><%= r.cutoffRaw %>등급</td>
+                        <% } else { %>
+                          <td><%= r.gpaScore %></td>
+                          <td><%= Math.round(r.recordScore) %></td>
+                          <td><%= r.totalScore %></td>
+                          <td><%= r.cutoffRaw %>등급</td>
+                        <% } %>
+                        <td class="fw-bold" style="color:var(--success);"><%= r.gpaProbability || r.probability %>%</td>
+                        <td class="gauge-cell">
+                          <% if (r.noRecord) { %>
+                            <div class="progress" style="height:14px;">
+                              <% var _cp = Math.min(r.probability||0, 100); var _cc = _cp >= 70 ? 'bg-success' : _cp >= 40 ? 'bg-warning' : 'bg-danger' %>
+                              <div class="progress-bar <%= _cc %>" style="width:<%= Math.round(_cp) %>%"><%= Math.round(_cp) %>%</div>
                             </div>
-                          </td>
-                        </tr>
-                      <% }) %>
-                    </tbody>
-                  </table>
+                          <% } else if (r.cutoffScore) { %>
+                            <div class="small" style="line-height:1.4;">
+                              합격컷 <strong><%= r.cutoffScore %></strong>점<br>
+                              <span class="<%= (r.totalToCutoff||0) >= 0 ? 'exceed' : 'shortfall' %>">
+                                <%= (r.totalToCutoff||0) >= 0 ? '+' : '' %><%= (r.totalToCutoff||0).toFixed(1) %>
+                                <%= (r.totalToCutoff||0) >= 0 ? '초과 ✅' : '미달 ❌' %>
+                              </span>
+                            </div>
+                          <% } %>
+                        </td>
+                      </tr>
+                    <% }) %>
+                  </tbody>
+                </table>
               </div>
             <% } %>
 
-            <% if (midProb.length > 0) { %>
+<% if (midProb.length > 0) { %>
               <div class="result-section-mid mb-4">
                 <h5 class="fw-bold mb-3" style="color:var(--warning);">도전해볼 만해요 (40%~70%)</h5>
               </div>
               <div class="table-responsive mb-4">
-                  <table class="table table-hover align-middle">
-                    <thead>
+                <table class="table table-hover align-middle">
+                  <thead>
+                    <tr>
+                      <th>대학교</th>
+                      <th>학과</th>
+                      <th>전형</th>
+                      <th>내신점수</th>
+                      <th>학생부점수</th>
+                      <th>최종점수</th>
+                      <th>내신합격컷</th>
+                      <th>내신확률</th>
+                      <th>종합점수분석</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% midProb.forEach(function(r) { %>
                       <tr>
-                        <th>대학교</th>
-                        <th>학과</th>
-                        <th>전형</th>
-                        <th>내신점수</th>
-                        <th>학생부점수</th>
-                        <th>최종점수</th>
-                        <th>합격컷</th>
-                        <th>확률</th>
-                        <th>게이지</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <% midProb.forEach(function(r) { %>
-                        <tr>
-                          <td class="fw-medium">
-                            <%= r.university %>
-                            <a href="/admin/<%= r.universityId %>" class="text-decoration-none small ms-1" title="기준 편집" style="color:var(--gray-400);">편집</a>
-                          </td>
-                          <td><%= r.department %></td>
-                          <td><span class="badge bg-secondary"><%= r.admissionType || admissionType || '종합' %></span></td>
-                          <% if (r.cutoffIsGrade) { %>
-                            <td><%= Number(student.gpa_grade).toFixed(2) %>등급</td>
-                            <td>-</td>
-                            <td><%= r.gpaScore %></td>
-                            <td><%= r.cutoffRaw %>등급</td>
-                          <% } else { %>
-                            <td><%= r.gpaScore %></td>
-                            <td><%= Math.round(r.recordScore) %></td>
-                            <td><%= r.totalScore %></td>
-                            <td><%= r.cutoffScore %></td>
-                          <% } %>
-                          <td class="fw-bold" style="color:var(--warning);"><%= r.probability %>%</td>
-                          <td class="gauge-cell">
-                            <div class="progress" style="height:20px;">
-                              <div class="progress-bar bg-warning" style="width:<%= Math.min(r.probability, 100) %>%"><%= Math.round(r.probability) %>%</div>
+                        <td class="fw-medium">
+                          <%= r.university %>
+                          <a href="/admin/<%= r.universityId %>" class="text-decoration-none small ms-1" title="기준 편집" style="color:var(--gray-400);">편집</a>
+                        </td>
+                        <td><%= r.department %></td>
+                        <td><span class="badge bg-secondary"><%= r.admissionType || admissionType || '종합' %></span></td>
+                        <% if (r.noRecord) { %>
+                          <td><%= Number(student.gpa_grade).toFixed(2) %>등급</td>
+                          <td>-</td>
+                          <td><%= r.gpaScore %></td>
+                          <td><%= r.cutoffRaw %>등급</td>
+                        <% } else { %>
+                          <td><%= r.gpaScore %></td>
+                          <td><%= Math.round(r.recordScore) %></td>
+                          <td><%= r.totalScore %></td>
+                          <td><%= r.cutoffRaw %>등급</td>
+                        <% } %>
+                        <td class="fw-bold" style="color:var(--warning);"><%= r.gpaProbability || r.probability %>%</td>
+                        <td class="gauge-cell">
+                          <% if (r.noRecord) { %>
+                            <div class="progress" style="height:14px;">
+                              <% var _cp = Math.min(r.probability||0, 100); var _cc = _cp >= 70 ? 'bg-success' : _cp >= 40 ? 'bg-warning' : 'bg-danger' %>
+                              <div class="progress-bar <%= _cc %>" style="width:<%= Math.round(_cp) %>%"><%= Math.round(_cp) %>%</div>
                             </div>
-                          </td>
-                        </tr>
-                      <% }) %>
-                    </tbody>
-                  </table>
+                          <% } else if (r.cutoffScore) { %>
+                            <div class="small" style="line-height:1.4;">
+                              합격컷 <strong><%= r.cutoffScore %></strong>점<br>
+                              <span class="<%= (r.totalToCutoff||0) >= 0 ? 'exceed' : 'shortfall' %>">
+                                <%= (r.totalToCutoff||0) >= 0 ? '+' : '' %><%= (r.totalToCutoff||0).toFixed(1) %>
+                                <%= (r.totalToCutoff||0) >= 0 ? '초과 ✅' : '미달 ❌' %>
+                              </span>
+                            </div>
+                          <% } %>
+                        </td>
+                      </tr>
+                    <% }) %>
+                  </tbody>
+                </table>
               </div>
             <% } %>
 
-            <% if (lowProb.length > 0) { %>
+<% if (lowProb.length > 0) { %>
               <div class="result-section-low mb-4">
                 <h5 class="fw-bold mb-3" style="color:var(--danger);">추가 보완이 필요해요 (40% 미만)</h5>
               </div>
               <div class="table-responsive mb-4">
-                  <table class="table table-hover align-middle">
-                    <thead>
+                <table class="table table-hover align-middle">
+                  <thead>
+                    <tr>
+                      <th>대학교</th>
+                      <th>학과</th>
+                      <th>전형</th>
+                      <th>내신점수</th>
+                      <th>학생부점수</th>
+                      <th>최종점수</th>
+                      <th>내신합격컷</th>
+                      <th>내신확률</th>
+                      <th>종합점수분석</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% lowProb.forEach(function(r) { %>
                       <tr>
-                        <th>대학교</th>
-                        <th>학과</th>
-                        <th>전형</th>
-                        <th>내신점수</th>
-                        <th>학생부점수</th>
-                        <th>최종점수</th>
-                        <th>합격컷</th>
-                        <th>확률</th>
-                        <th>게이지</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <% lowProb.forEach(function(r) { %>
-                        <tr>
-                          <td class="fw-medium">
-                            <%= r.university %>
-                            <a href="/admin/<%= r.universityId %>" class="text-decoration-none small ms-1" title="기준 편집" style="color:var(--gray-400);">편집</a>
-                          </td>
-                          <td><%= r.department %></td>
-                          <td><span class="badge bg-secondary"><%= r.admissionType || admissionType || '종합' %></span></td>
-                          <% if (r.cutoffIsGrade) { %>
-                            <td><%= Number(student.gpa_grade).toFixed(2) %>등급</td>
-                            <td>-</td>
-                            <td><%= r.gpaScore %></td>
-                            <td><%= r.cutoffRaw %>등급</td>
-                          <% } else { %>
-                            <td><%= r.gpaScore %></td>
-                            <td><%= Math.round(r.recordScore) %></td>
-                            <td><%= r.totalScore %></td>
-                            <td><%= r.cutoffScore %></td>
-                          <% } %>
-                          <td class="fw-bold" style="color:var(--danger);"><%= r.probability %>%</td>
-                          <td class="gauge-cell">
-                            <div class="progress" style="height:20px;">
-                              <div class="progress-bar bg-danger" style="width:<%= Math.min(r.probability, 100) %>%"><%= Math.round(r.probability) %>%</div>
+                        <td class="fw-medium">
+                          <%= r.university %>
+                          <a href="/admin/<%= r.universityId %>" class="text-decoration-none small ms-1" title="기준 편집" style="color:var(--gray-400);">편집</a>
+                        </td>
+                        <td><%= r.department %></td>
+                        <td><span class="badge bg-secondary"><%= r.admissionType || admissionType || '종합' %></span></td>
+                        <% if (r.noRecord) { %>
+                          <td><%= Number(student.gpa_grade).toFixed(2) %>등급</td>
+                          <td>-</td>
+                          <td><%= r.gpaScore %></td>
+                          <td><%= r.cutoffRaw %>등급</td>
+                        <% } else { %>
+                          <td><%= r.gpaScore %></td>
+                          <td><%= Math.round(r.recordScore) %></td>
+                          <td><%= r.totalScore %></td>
+                          <td><%= r.cutoffRaw %>등급</td>
+                        <% } %>
+                        <td class="fw-bold" style="color:var(--danger);"><%= r.gpaProbability || r.probability %>%</td>
+                        <td class="gauge-cell">
+                          <% if (r.noRecord) { %>
+                            <div class="progress" style="height:14px;">
+                              <% var _cp = Math.min(r.probability||0, 100); var _cc = _cp >= 70 ? 'bg-success' : _cp >= 40 ? 'bg-warning' : 'bg-danger' %>
+                              <div class="progress-bar <%= _cc %>" style="width:<%= Math.round(_cp) %>%"><%= Math.round(_cp) %>%</div>
                             </div>
-                          </td>
-                        </tr>
-                      <% }) %>
-                    </tbody>
-                  </table>
+                          <% } else if (r.cutoffScore) { %>
+                            <div class="small" style="line-height:1.4;">
+                              합격컷 <strong><%= r.cutoffScore %></strong>점<br>
+                              <span class="<%= (r.totalToCutoff||0) >= 0 ? 'exceed' : 'shortfall' %>">
+                                <%= (r.totalToCutoff||0) >= 0 ? '+' : '' %><%= (r.totalToCutoff||0).toFixed(1) %>
+                                <%= (r.totalToCutoff||0) >= 0 ? '초과 ✅' : '미달 ❌' %>
+                              </span>
+                            </div>
+                          <% } %>
+                        </td>
+                      </tr>
+                    <% }) %>
+                  </tbody>
+                </table>
               </div>
             <% } %>
 
@@ -233,45 +266,6 @@
           </div>
         </div>
 
-        <div class="card shadow-sm mb-4">
-          <div class="card-body p-4">
-            <h4 class="section-title">학생부 상세 분석 <% if (results.length > 0) { %><span class="badge bg-secondary fs-6" style="font-size:0.8rem !important;"><%= results[0].university %> 기준</span><% } %></h4>
-            <% if (results.length > 0) { %>
-              <div class="table-responsive">
-                <table class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th>항목</th>
-                      <th>점수</th>
-                      <th>가중치</th>
-                      <th>가중점수</th>
-                      <th>만점</th>
-                      <th>달성률</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <% results[0].recordDetails.forEach(function(d) { %>
-                      <tr>
-                        <td><%= d.label %></td>
-                        <td><%= d.score %> / 10</td>
-                        <td><%= d.weight %></td>
-                        <td><%= d.weighted.toFixed(2) %></td>
-                        <td><%= d.maxWeighted.toFixed(2) %></td>
-                        <td>
-                          <div class="progress" style="height:16px;">
-                            <div class="progress-bar <%= d.score >= 8 ? 'bg-success' : (d.score >= 5 ? 'bg-warning' : 'bg-danger') %>" style="width:<%= (d.score / 10) * 100 %>%">
-                              <%= Math.round((d.score / 10) * 100) %>%
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    <% }) %>
-                  </tbody>
-                </table>
-              </div>
-            <% } %>
-          </div>
-        </div>
 
         <div class="text-center d-flex justify-content-center gap-3 flex-wrap">
           <a href="/" class="btn btn-primary btn-lg">다시 분석하기</a>

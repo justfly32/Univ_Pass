@@ -101,7 +101,1071 @@
       "id": "kangwon_natl"
     },
     {
-      "id": "jeju_natl"
+      "id": "jeju_natl",
+      "grade_conversion": "default",
+      "departments": [
+        {
+          "name": "간호학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 3.29,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "건축학부-건축공학전공",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 4.77,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "건축학부-건축학전공(5년)",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 4.77,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "경영정보학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 4.16,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "경영학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 3.64,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "경영학과(야)",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 3.04,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "경제학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 4.42,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "관광개발학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 5.31,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "관광경영학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 4.7,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "국어교육과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 4.51,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "국어국문학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 3.93,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "기계시스템공학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 5.41,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "데이터사이언스학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 4.99,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "독일학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 5.4,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "무역학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 4.76,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "물리학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 6.32,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "바이오메디컬정보학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 5.85,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "사학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 4.51,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "사회교육과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 2.7,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "사회학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 3.12,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "산업응용경제학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 5.17,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "생명공학부",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 4.62,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "생물학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 5.85,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "생활환경복지학부",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 4.5,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "수산생명의학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 4.02,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "수의예과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 1.36,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "수학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 6.33,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "수학교육과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 2.82,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "식품생명공학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 4.96,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "식품영양학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 3.56,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "약학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 1.16,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "언론홍보학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 4.02,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "영어교육과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 3.16,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "영어영문학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 4.52,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "윤리교육과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 3.39,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "의예과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 1.04,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "일어일문학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 4.66,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "전기에너지공학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 5.24,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "전자공학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 4.79,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "정치외교학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 4.84,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "중어중문학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 4.5,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "지구해양과학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 5.25,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "지리교육과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 3.4,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "철학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 5.39,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "체육교육과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 2.35,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "초등교육과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 2.63,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "컴퓨터교육과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 3.32,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "토목공학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 4.69,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "통신공학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 6.21,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "패션의류학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 5.01,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "해양산업경찰학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 4.34,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "해양생명과학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 4.42,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "해양시스템공학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 5.73,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "행정학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 3.71,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "행정학과(야)",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 5.24,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "화학공학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 4.77,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "화학코스메틱스학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 5.07,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "환경공학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 4.88,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "회계학과",
+          "admission_type": "교과",
+          "gpa_weight": 1,
+          "record_weight": 0,
+          "cutoff_score": 3.44,
+          "cutoff_is_grade": true,
+          "no_record": true
+        },
+        {
+          "name": "(야)경영학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 74.45,
+          "cutoff_grade": 3.15,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "(야)행정학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 93.48,
+          "cutoff_grade": 1.36,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "간호학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 74.62,
+          "cutoff_grade": 3.14,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "건축학부 건축학전공(5년)",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 56.6,
+          "cutoff_grade": 4.17,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "경영정보학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 28.1,
+          "cutoff_grade": 5.7,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "경영학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 83.24,
+          "cutoff_grade": 2.48,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "경제학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 57,
+          "cutoff_grade": 4.15,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "관광개발학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 36.77,
+          "cutoff_grade": 5.19,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "관광경영학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 54.2,
+          "cutoff_grade": 4.29,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "관광융복합학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 9.18,
+          "cutoff_grade": 7.26,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "국어교육과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 73.43,
+          "cutoff_grade": 3.21,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "국어국문학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 46.2,
+          "cutoff_grade": 4.69,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "기계시스템공학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 43.6,
+          "cutoff_grade": 4.82,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "데이터사이언스학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 47.6,
+          "cutoff_grade": 4.62,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "독일학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 33.03,
+          "cutoff_grade": 5.41,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "무역학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 25.38,
+          "cutoff_grade": 5.86,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "물리학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 17.6,
+          "cutoff_grade": 6.45,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "바이오메디컬정보학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 42.6,
+          "cutoff_grade": 4.87,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "사학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 48.2,
+          "cutoff_grade": 4.59,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "사회교육과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 64.76,
+          "cutoff_grade": 3.72,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "사회학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 46,
+          "cutoff_grade": 4.7,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "산업응용경제학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 52.2,
+          "cutoff_grade": 4.39,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "생명공학부",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 47.6,
+          "cutoff_grade": 4.62,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "생물학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 86.24,
+          "cutoff_grade": 2.23,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "생활환경복지학부",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 56.4,
+          "cutoff_grade": 4.18,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "수산생명의학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 43.6,
+          "cutoff_grade": 4.82,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "수의예과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 90.96,
+          "cutoff_grade": 1.72,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "수학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 50.2,
+          "cutoff_grade": 4.49,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "수학교육과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 69.18,
+          "cutoff_grade": 3.46,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "식품생명공학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 31.5,
+          "cutoff_grade": 5.5,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "식품영양학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 60.34,
+          "cutoff_grade": 3.98,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "언론홍보학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 43.6,
+          "cutoff_grade": 4.82,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "영어교육과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 61.19,
+          "cutoff_grade": 3.93,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "영어영문학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 48.6,
+          "cutoff_grade": 4.57,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "윤리교육과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 77.12,
+          "cutoff_grade": 2.99,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "일어일문학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 22.88,
+          "cutoff_grade": 6.01,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "전기에너지공학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 71.56,
+          "cutoff_grade": 3.32,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "전자공학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 45.4,
+          "cutoff_grade": 4.73,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "정치외교학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 53.6,
+          "cutoff_grade": 4.32,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "지구해양과학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 35.92,
+          "cutoff_grade": 5.24,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "지리교육과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 78.68,
+          "cutoff_grade": 2.86,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "철학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 43.6,
+          "cutoff_grade": 4.82,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "초등교육과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 80.72,
+          "cutoff_grade": 2.69,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "컴퓨터교육과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 46.8,
+          "cutoff_grade": 4.66,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "토목공학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 26.74,
+          "cutoff_grade": 5.78,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "통신공학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 80.12,
+          "cutoff_grade": 2.74,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "패션의류학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 50.8,
+          "cutoff_grade": 4.46,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "해양산업경찰학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 45.8,
+          "cutoff_grade": 4.71,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "해양생명과학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 22.52,
+          "cutoff_grade": 6.04,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "해양시스템공학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 24.02,
+          "cutoff_grade": 5.94,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "행정학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 59.6,
+          "cutoff_grade": 4.02,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "환경공학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 45.4,
+          "cutoff_grade": 4.73,
+          "cutoff_is_grade": false,
+          "no_record": false
+        },
+        {
+          "name": "회계학과",
+          "admission_type": "종합",
+          "gpa_weight": 0.4,
+          "record_weight": 0.6,
+          "cutoff_score": 60.34,
+          "cutoff_grade": 3.98,
+          "cutoff_is_grade": false,
+          "no_record": false
+        }
+      ]
     },
     {
       "id": "sookmyung",

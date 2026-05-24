@@ -158,12 +158,14 @@ app.post('/admin/:univId', (req, res) => {
     const name = names[i] ? names[i].trim() : ''
     if (!name) continue
     const noRecord = noRecords[i] === '1' || noRecords[i] === true
+    const admType = types[i] || admissionType
     submittedDepartments.push({
       name,
-      admission_type: types[i] || admissionType,
+      admission_type: admType,
       gpa_weight: noRecord ? 1.0 : (parseFloat(gpaWs[i]) || 0.5),
       record_weight: noRecord ? 0.0 : (parseFloat(recordWs[i]) || 0.5),
       cutoff_score: parseFloat(cutoffs[i]) || 50,
+      cutoff_is_grade: admType === '교과' || undefined,
       no_record: noRecord || undefined
     })
   }
