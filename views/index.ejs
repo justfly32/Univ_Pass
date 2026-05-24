@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Univ_Pass - 대학 입시 분석</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="container py-5">
+    <div class="hero-section">
+      <h1>Univ_Pass</h1>
+      <p class="lead">수시 합격 확률 분석</p>
+      <a href="/admin" class="btn btn-outline-secondary btn-sm mt-2">대학 기준 관리</a>
+    </div>
+
+    <% if (errors.length > 0) { %>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>입력 오류</strong>
+        <ul class="mb-0 mt-2">
+          <% errors.forEach(function(err) { %>
+            <li><%= err %></li>
+          <% }) %>
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    <% } %>
+
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card shadow-sm mb-4">
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h3 class="section-title mb-0">학생 정보 입력</h3>
+              <div class="btn-group btn-group-sm" role="group">
+                <a href="/?type=교과" class="btn <%= admissionType === '교과' ? 'btn-primary' : 'btn-outline-primary' %>">학생부교과</a>
+                <a href="/?type=종합" class="btn <%= admissionType === '종합' ? 'btn-primary' : 'btn-outline-primary' %>">학생부종합</a>
+              </div>
+            </div>
+            <p class="small text-muted mb-3"><%= admissionType === '교과' ? '내신 성적 중심으로 평가하는 전형입니다.' : '학생부 종합 평가로 진행되는 전형입니다.' %></p>
+            <form action="/analyze" method="POST" onsubmit="document.getElementById('deptQueryInput').value=document.getElementById('deptSearch').value">
+              <input type="hidden" name="admission_type" value="<%= admissionType %>">
+              <input type="hidden" name="dept_query" id="deptQueryInput" value="">
+              <div class="mb-4">
+                <label class="form-label">이름</label>
+                <input type="text" name="name" class="form-control form-control-lg" placeholder="이름을 입력하세요" value="<%= data ? data.name : '' %>" required>
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label">내신 평균 등급 (1~9)</label>
+                <input type="number" name="gpa_grade" class="form-control form-control-lg" min="1" max="9" step="0.01" placeholder="예: 2.35" value="<%= data ? data.gpa_grade : '' %>" required>
+                <div class="form-text">1등급이 가장 우수, 9등급이 가장 낮음</div>
+              </div>
+
+              <div class="mb-4" id="recordSection">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h5 class="fw-semibold mb-0">학생부 평가 (각 항목 0~10점)</h5>
+                  <div class="form-check mb-0">
+                    <input type="checkbox" class="form-check-input" id="noRecordCheck" name="no_record" value="1" <%= admissionType === '교과' ? 'checked' : '' %> onchange="toggleRecordSection()">
+                    <label class="form-check-label small" for="noRecordCheck">학생부 평가 미반영 (내신만 분석)</label>
+                  </div>
+                </div>
+
+                <div id="recordInputs">
+                <ul class="nav nav-tabs nav-fill mb-3" role="tablist">
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="tab-img" data-bs-toggle="tab" data-bs-target="#panel-img" type="button" role="tab">이미지</button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="tab-text" data-bs-toggle="tab" data-bs-target="#panel-text" type="button" role="tab">텍스트</button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="tab-pdf" data-bs-toggle="tab" data-bs-target="#panel-pdf" type="button" role="tab">PDF</button>
+                  </li>
+                </ul>
+
+                <div class="tab-content">
+                  <div class="tab-pane fade show active" id="panel-img" role="tabpanel">
+                    <div class="card bg-light">
+                      <div class="card-body py-3">
+                        <div class="d-flex align-items-center gap-3 flex-wrap">
+                          <input type="file" id="recordImageInput" accept="image/jpeg,image/png,image/webp" class="form-control form-control-sm" style="width:200px">
+                          <button type="button" class="btn btn-sm btn-outline-primary" onclick="analyzeRecordImage()">OCR 분석</button>
+                        </div>
+                        <div id="recordPreview" class="mt-2" style="display:none">
+                          <img id="recordPreviewImg" class="img-thumbnail" style="max-height:150px">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="tab-pane fade" id="panel-text" role="tabpanel">
+                    <div class="card bg-light">
+                      <div class="card-body py-3">
+                        <textarea id="recordTextInput" class="form-control form-control-sm" rows="5" placeholder="학생부 텍스트를 직접 입력하세요..."></textarea>
+                        <div class="mt-2 d-flex gap-2">
+                          <button type="button" class="btn btn-sm btn-outline-primary" onclick="analyzeRecordText()">텍스트 분석</button>
+                          <button type="button" class="btn btn-sm btn-outline-secondary ms-auto" onclick="clearRecordText()">입력 비우기</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="tab-pane fade" id="panel-pdf" role="tabpanel">
+                    <div class="card bg-light">
+                      <div class="card-body py-3">
+                        <div class="d-flex align-items-center gap-3 flex-wrap">
+                          <input type="file" id="recordPdfInput" accept=".pdf" class="form-control form-control-sm" style="width:200px">
+                          <button type="button" class="btn btn-sm btn-outline-primary" onclick="analyzeRecordPdf()">PDF 분석</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div id="recordStatus" class="small mt-2" style="min-height:1.2em"></div>
+                <div id="recordReasoning" class="small text-muted mt-1" style="display:none"></div>
+
+                <div class="row g-3 mt-2">
+                  <div class="col-md-6">
+                    <label class="form-label">학업역량</label>
+                    <input type="number" name="academic_competency" class="form-control" min="0" max="10" step="0.5" placeholder="0~10" value="<%= data ? data.academic_competency : '' %>" required>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">학습태도</label>
+                    <input type="number" name="learning_attitude" class="form-control" min="0" max="10" step="0.5" placeholder="0~10" value="<%= data ? data.learning_attitude : '' %>" required>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">진로역량</label>
+                    <input type="number" name="career_competency" class="form-control" min="0" max="10" step="0.5" placeholder="0~10" value="<%= data ? data.career_competency : '' %>" required>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">진로탐색활동</label>
+                    <input type="number" name="career_exploration" class="form-control" min="0" max="10" step="0.5" placeholder="0~10" value="<%= data ? data.career_exploration : '' %>" required>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">인성</label>
+                    <input type="number" name="character" class="form-control" min="0" max="10" step="0.5" placeholder="0~10" value="<%= data ? data.character : '' %>" required>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">리더십</label>
+                    <input type="number" name="leadership" class="form-control" min="0" max="10" step="0.5" placeholder="0~10" value="<%= data ? data.leadership : '' %>" required>
+                  </div>
+                </div>
+                </div>
+              </div>
+
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary btn-lg">입시 분석 실행</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="card shadow-sm mt-4">
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="section-title mb-0">분석 대상 대학 (<span id="univCount"><%= universities.length %></span>개)</h5>
+              <div class="d-flex gap-2 align-items-center">
+                <input type="text" id="deptSearch" class="form-control form-control-sm" placeholder="학과 검색..." style="width:180px" oninput="filterUniversities()">
+                <a href="/admin" class="btn btn-sm btn-outline-secondary" style="white-space:nowrap">기준 관리</a>
+              </div>
+            </div>
+            <div class="row row-cols-2 row-cols-md-3 g-2" id="univCardContainer">
+              <% universities.forEach(function(u) { %>
+                <div class="col univ-card" data-name="<%= u.name %>" data-region="<%= u.region %>" data-depts="<%= u.departments.join(',') %>">
+                    <div class="border rounded p-3 bg-light h-100 d-flex flex-column">
+                    <div class="fw-bold"><%= u.name %></div>
+                    <div class="text-muted" style="font-size:0.85rem;"><%= u.region %> · <span class="dept-label"><%= u.departmentCount %>개 학과</span>
+                      <% if (u.종합Count > 0 || u.교과Count > 0) { %>
+                        <span class="small">(<%= u.교과Count > 0 ? '교과 '+u.교과Count : '' %><%= (u.교과Count > 0 && u.종합Count > 0) ? '/' : '' %><%= u.종합Count > 0 ? '종합 '+u.종합Count : '' %>)</span>
+                      <% } %>
+                    </div>
+                    <div class="mt-auto pt-2 d-flex gap-2 flex-wrap">
+                      <% if (u.admission_url) { %>
+                        <a href="<%= u.admission_url %>" target="_blank" class="text-decoration-none" style="font-size:0.8rem;">입학처</a>
+                      <% } %>
+                      <% if (u.plan_url) { %>
+                        <a href="<%= u.plan_url %>" target="_blank" class="text-decoration-none" style="font-size:0.8rem;">전형계획</a>
+                      <% } %>
+                      <a href="/admin/<%= u.id %>" class="text-decoration-none" style="font-size:0.8rem;">편집</a>
+                    </div>
+                  </div>
+                </div>
+              <% }) %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const CATEGORIES = ['academic_competency', 'learning_attitude', 'career_competency', 'career_exploration', 'character', 'leadership']
+
+    function setStatus(msg, cls) {
+      const s = document.getElementById('recordStatus')
+      s.textContent = msg; s.className = 'small ' + cls
+    }
+
+    function toggleRecordSection() {
+      const cb = document.getElementById('noRecordCheck')
+      const inputs = document.getElementById('recordInputs')
+      if (!cb || !inputs) return
+      if (cb.checked) {
+        inputs.style.display = 'none'
+        CATEGORIES.forEach(function(key) {
+          const el = document.querySelector('input[name="' + key + '"]')
+          if (el) el.required = false
+        })
+      } else {
+        inputs.style.display = ''
+        CATEGORIES.forEach(function(key) {
+          const el = document.querySelector('input[name="' + key + '"]')
+          if (el) el.required = true
+        })
+      }
+    }
+
+    // Run on load
+    document.addEventListener('DOMContentLoaded', toggleRecordSection)
+
+    function fillScores(data) {
+      let filled = 0
+      for (const key of CATEGORIES) {
+        const el = document.querySelector(`input[name="${key}"]`)
+        if (el && data.scores[key] !== null && data.scores[key] !== undefined) {
+          el.value = data.scores[key]
+          filled++
+        }
+      }
+      const r = document.getElementById('recordReasoning')
+      if (data.reasoning) {
+        r.textContent = '📋 ' + data.reasoning
+        r.style.display = 'block'
+      } else {
+        r.style.display = 'none'
+      }
+    }
+
+    document.getElementById('recordImageInput').addEventListener('change', function() {
+      const preview = document.getElementById('recordPreview')
+      const img = document.getElementById('recordPreviewImg')
+      const file = this.files[0]
+      if (file) {
+        const reader = new FileReader()
+        reader.onload = function(e) { img.src = e.target.result; preview.style.display = 'block' }
+        reader.readAsDataURL(file)
+      } else {
+        preview.style.display = 'none'
+      }
+      document.getElementById('recordReasoning').style.display = 'none'
+    })
+
+    async function analyzeRecordImage() {
+      const input = document.getElementById('recordImageInput')
+      if (!input.files || !input.files[0]) { setStatus('파일을 선택해주세요', 'text-danger'); return }
+      setStatus('분석 중...', 'text-info')
+      const fd = new FormData()
+      fd.append('student_record', input.files[0])
+      try {
+        const res = await fetch('/api/analyze-student-record', { method: 'POST', body: fd })
+        const data = await res.json()
+        if (!data.success) { setStatus('오류: ' + data.error, 'text-danger'); return }
+        fillScores(data)
+        setStatus('✅ 분석 완료', 'text-success')
+      } catch (e) { setStatus('오류: ' + e.message, 'text-danger') }
+    }
+
+    async function analyzeRecordText() {
+      const text = document.getElementById('recordTextInput').value.trim()
+      if (!text) { setStatus('텍스트를 입력해주세요', 'text-danger'); return }
+      if (text.length < 10) { setStatus('텍스트가 너무 짧습니다', 'text-danger'); return }
+      setStatus('분석 중...', 'text-info')
+      try {
+        const res = await fetch('/api/analyze-student-text', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text })
+        })
+        const data = await res.json()
+        if (!data.success) { setStatus('오류: ' + data.error, 'text-danger'); return }
+        fillScores(data)
+        setStatus('✅ 분석 완료', 'text-success')
+      } catch (e) { setStatus('오류: ' + e.message, 'text-danger') }
+    }
+
+    function clearRecordText() {
+      document.getElementById('recordTextInput').value = ''
+      setStatus('', '')
+      document.getElementById('recordReasoning').style.display = 'none'
+    }
+
+    function filterUniversities() {
+      const q = document.getElementById('deptSearch').value.trim().toLowerCase()
+      const cards = document.querySelectorAll('.univ-card')
+      let count = 0
+      for (const card of cards) {
+        const name = card.dataset.name.toLowerCase()
+        const region = card.dataset.region.toLowerCase()
+        const depts = (card.dataset.depts || '').toLowerCase()
+
+        const match = !q || name.includes(q) || region.includes(q) || depts.includes(q)
+        card.style.display = match ? '' : 'none'
+
+        if (match) {
+          count++
+          const label = card.querySelector('.dept-label')
+          if (q && depts.includes(q)) {
+            const matched = (card.dataset.depts || '').split(',').filter(d => d.toLowerCase().includes(q)).join(', ')
+            label.textContent = matched
+          } else {
+            label.textContent = card.dataset.depts.split(',').length + '개 학과'
+          }
+        }
+      }
+      document.getElementById('univCount').textContent = count
+    }
+
+    async function analyzeRecordPdf() {
+      const input = document.getElementById('recordPdfInput')
+      if (!input.files || !input.files[0]) { setStatus('PDF 파일을 선택해주세요', 'text-danger'); return }
+      setStatus('분석 중...', 'text-info')
+      const fd = new FormData()
+      fd.append('student_record_pdf', input.files[0])
+      try {
+        const res = await fetch('/api/analyze-student-pdf', { method: 'POST', body: fd })
+        const data = await res.json()
+        if (!data.success) { setStatus('오류: ' + data.error, 'text-danger'); return }
+        fillScores(data)
+        setStatus('✅ 분석 완료', 'text-success')
+      } catch (e) { setStatus('오류: ' + e.message, 'text-danger') }
+    }
+  </script>
+</body>
+</html>

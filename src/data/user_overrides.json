@@ -1,0 +1,122 @@
+{
+  "universities": [
+    {
+      "id": "seoul_national",
+      "grade_conversion": "default"
+    },
+    {
+      "id": "yonsei",
+      "grade_conversion": "default"
+    },
+    {
+      "id": "korea"
+    },
+    {
+      "id": "sogang",
+      "grade_conversion": "default"
+    },
+    {
+      "id": "sungkyunkwan",
+      "grade_conversion": "default"
+    },
+    {
+      "id": "hanyang"
+    },
+    {
+      "id": "chungang"
+    },
+    {
+      "id": "kyunghee"
+    },
+    {
+      "id": "ewha"
+    },
+    {
+      "id": "hufs"
+    },
+    {
+      "id": "uos"
+    },
+    {
+      "id": "konkuk"
+    },
+    {
+      "id": "dongguk"
+    },
+    {
+      "id": "hongik"
+    },
+    {
+      "id": "soongsil",
+      "admission_url": "https://admission.ssu.ac.kr/",
+      "plan_url": "https://admission.ssu.ac.kr/board/notice_list.asp?page=1&flag=&page_no=1_1_1"
+    },
+    {
+      "id": "kookmin",
+      "admission_url": "https://admission.kookmin.ac.kr/",
+      "plan_url": "https://admission.kookmin.ac.kr/nonschedule/notice.php"
+    },
+    {
+      "id": "inha",
+      "admission_url": "https://admission.inha.ac.kr/",
+      "plan_url": "https://admission.inha.ac.kr/cms/FR_CON/index.do?MENU_ID=240&CONTENTS_NO=1"
+    },
+    {
+      "id": "ajou"
+    },
+    {
+      "id": "gachon",
+      "admission_url": "https://admission.gachon.ac.kr/",
+      "plan_url": "https://admission.gachon.ac.kr/admission/html/rolling/notice.asp"
+    },
+    {
+      "id": "dankook",
+      "admission_url": "https://ipsi.dankook.ac.kr/",
+      "plan_url": "https://ipsi.dankook.ac.kr/jukjeon/doumi/mojip.html?bbsid=juk_paper&ctg_cd=01"
+    },
+    {
+      "id": "myongji",
+      "admission_url": "https://ipsi.mju.ac.kr/",
+      "plan_url": "https://iphak.mju.ac.kr/pages/?p=9&b=B_1_1&cate=%EC%88%98%EC%8B%9C"
+    },
+    {
+      "id": "pusan_natl"
+    },
+    {
+      "id": "kyungpook_natl"
+    },
+    {
+      "id": "chungnam_natl"
+    },
+    {
+      "id": "chonnam_natl"
+    },
+    {
+      "id": "chungbuk_natl"
+    },
+    {
+      "id": "jeonbuk_natl"
+    },
+    {
+      "id": "kangwon_natl"
+    },
+    {
+      "id": "jeju_natl"
+    },
+    {
+      "id": "sookmyung",
+      "admission_url": "https://admission.sookmyung.ac.kr/",
+      "plan_url": "https://admission.sookmyung.ac.kr/admission/html/rolling/notice.asp"
+    },
+    {
+      "id": "kyonggi",
+      "admission_url": "https://enter.kyonggi.ac.kr/index.do",
+      "plan_url": "https://enter.kyonggi.ac.kr/cms/FR_CON/index.do?MENU_ID=120"
+    },
+    {
+      "id": "incheon_natl",
+      "admission_url": "https://admission.inu.ac.kr/main.do",
+      "plan_url": "https://admission.inu.ac.kr/submenu.do?menuurl=7dcKmGI5ZvQB9F1mAEBAGg%3d%3d&"
+    }
+  ]
+}

@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Univ_Pass - <%= univ.name %> 편집</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+<style>
+.toast-container { position:fixed; top:20px; right:20px; z-index:9999; display:flex; flex-direction:column; gap:8px; }
+.toast-msg { padding:12px 20px; border-radius:8px; font-size:0.9rem; font-weight:500; box-shadow:0 4px 12px rgba(0,0,0,0.15); animation:toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards; }
+.toast-msg.success { background:#10b981; color:#fff; }
+.toast-msg.error { background:#ef4444; color:#fff; }
+@keyframes toastIn { from{opacity:0;transform:translateX(100%)} to{opacity:1;transform:translateX(0)} }
+@keyframes toastOut { from{opacity:1;transform:translateX(0)} to{opacity:0;transform:translateX(100%)} }
+</style>
+</head>
+<body>
+  <div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <a href="/admin" class="text-decoration-none small" style="color:var(--gray-500);">&larr; 관리자 목록</a>
+        <h1 class="fw-bold mt-1" style="font-size:1.8rem; color:var(--primary);"><%= univ.name %></h1>
+        <span class="badge bg-secondary me-1"><%= univ.type %></span>
+        <span class="badge bg-primary" style="background:var(--primary-light) !important;"><%= univ.region %></span>
+      </div>
+    </div>
+
+    <% if (saved) { %>
+      <script>document.addEventListener('DOMContentLoaded', function(){ showToast('저장되었습니다.','success') })</script>
+    <% } %>
+    <div id="toastContainer" class="toast-container"></div>
+
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <form action="/admin/<%= univ.id %>" method="POST" id="editForm">
+          <div class="card shadow-sm mb-4">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="section-title mb-0">수시 기준 편집</h5>
+                <div class="d-flex gap-2 align-items-center">
+                  <div class="btn-group btn-group-sm" role="group">
+                    <a href="/admin/<%= univ.id %>?type=교과" class="btn <%= admissionType === '교과' ? 'btn-primary' : 'btn-outline-primary' %>">교과</a>
+                    <a href="/admin/<%= univ.id %>?type=종합" class="btn <%= admissionType === '종합' ? 'btn-primary' : 'btn-outline-primary' %>">종합</a>
+                  </div>
+                  <button type="button" class="btn btn-sm btn-outline-danger" onclick="if(confirm('초기화하시겠습니까?')) location.href='/admin/<%= univ.id %>/reset'">
+                    기본값으로 초기화
+                  </button>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">등급별 점수 변환표</label>
+                <select name="grade_conversion" class="form-select">
+                  <% 
+                    var convLabels = { default: '수시 기본', top_tier: '수시 최상위권', competitive: '수시 경쟁형' }
+                    for (var key in gradeConversions) { 
+                  %>
+                    <option value="<%= key %>" <%= univ.grade_conversion === key ? 'selected' : '' %>>
+                      <%= convLabels[key] || key %> (<%= Object.entries(gradeConversions[key]).map(function(e) { return e[0]+':'+e[1]; }).join(', ') %>)
+                    </option>
+                  <% } %>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <input type="hidden" name="admission_type" value="<%= admissionType %>">
+
+          <div class="card shadow-sm mb-4">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-2" style="cursor:pointer" onclick="toggleGuide()">
+                <h5 class="section-title mb-0">판정 가이드</h5>
+                <span>
+                  <span id="guideEditBtn" class="badge bg-primary me-1" style="display:none;cursor:pointer" onclick="event.stopPropagation();editGuide()">수정</span>
+                  <span id="guideToggle" class="badge bg-secondary">펼치기</span>
+                </span>
+              </div>
+              <div id="guideContent" style="display:none">
+                <div id="guideView" class="small" style="white-space:pre-wrap;line-height:1.7"><%= univ.admission_guide || '등록된 가이드가 없습니다.' %></div>
+                <div id="guideEdit" style="display:none">
+                  <textarea id="guideTextarea" class="form-control form-control-sm" rows="10" placeholder="이 대학의 수시 전형 평가 기준, 유의사항, 팁 등을 입력하세요."></textarea>
+                  <div class="d-flex justify-content-end gap-2 mt-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="cancelEditGuide()">취소</button>
+                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="saveGuide()">가이드 저장</button>
+                  </div>
+                </div>
+                <div id="guideSaveMsg" class="small text-muted mt-1"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card shadow-sm mb-4">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="section-title mb-0">학과별 기준</h5>
+                <button type="button" class="btn btn-sm btn-outline-success" onclick="addDepartment()">+ 학과 추가</button>
+              </div>
+
+              <p class="small text-muted"><%= admissionType === '교과' ? '교과전형: 내신 성적 위주로 평가' : '종합전형: 학생부 종합 평가' %></p>
+              <div id="deptList">
+                <% 
+                  var filteredDepts = univ.departments.filter(function(d) { return d.admission_type === admissionType })
+                  filteredDepts.forEach(function(dept, idx) { 
+                %>
+                  <div class="dept-entry p-3 mb-3">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                      <h6 class="fw-bold mb-0">학과 #<%= idx + 1 %></h6>
+                      <button type="button" class="btn btn-sm btn-outline-danger" onclick="this.closest('.dept-entry').remove()">삭제</button>
+                    </div>
+                    <div class="row g-2">
+                      <div class="col-md-12 mb-2">
+                        <label class="form-label small">학과명</label>
+                        <input type="text" name="dept[name]" class="form-control form-control-sm" value="<%= dept.name %>" required>
+                        <input type="hidden" name="dept[admission_type]" value="<%= dept.admission_type %>">
+                      </div>
+                      <div class="col-md-4">
+                        <label class="form-label small">내신 가중치</label>
+                        <input type="number" name="dept[gpa_weight]" class="form-control form-control-sm" min="0" max="1" step="0.05" value="<%= dept.gpa_weight %>" required>
+                      </div>
+                      <div class="col-md-4">
+                        <label class="form-label small">학생부 가중치</label>
+                        <input type="number" name="dept[record_weight]" class="form-control form-control-sm" min="0" max="1" step="0.05" value="<%= dept.record_weight %>" required>
+                      </div>
+                      <div class="col-md-4">
+                        <% if (admissionType === '교과') { %>
+                          <label class="form-label small">합격컷 (1~9등급)</label>
+                          <input type="number" name="dept[cutoff_score]" class="form-control form-control-sm" min="1" max="9" step="0.01" value="<%= dept.cutoff_score %>" required>
+                        <% } else { %>
+                          <label class="form-label small">합격컷 (0~100)</label>
+                          <input type="number" name="dept[cutoff_score]" class="form-control form-control-sm" min="0" max="100" step="0.5" value="<%= dept.cutoff_score %>" required>
+                        <% } %>
+                      </div>
+                    </div>
+                    <% if (admissionType === '교과') { %>
+                      <div class="form-check mt-2">
+                        <input type="checkbox" class="form-check-input" name="dept[no_record]" value="1" id="nr_<%= idx %>" <%= dept.no_record ? 'checked' : '' %> onchange="toggleNoRecord(this)">
+                        <label class="form-check-label small" for="nr_<%= idx %>">학생부 평가 미반영 (내신 100% 반영)</label>
+                      </div>
+                    <% } %>
+                    <div class="small text-muted mt-1">내신+학생부 가중치 합 = <%= (dept.gpa_weight + dept.record_weight).toFixed(1) %> (1.0이 되어야 함)</div>
+                  </div>
+                <% }) %>
+                <% if (filteredDepts.length === 0) { %>
+                  <div class="text-muted small py-3"><%= admissionType %>전형 학과 데이터가 없습니다. 학과를 추가해주세요.</div>
+                <% } %>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-grid gap-2">
+            <button type="button" class="btn btn-primary btn-lg" onclick="submitForm(this.closest('form'))">저장하기</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="sidebar-sticky">
+        <div class="card shadow-sm mb-4">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h5 class="section-title mb-0">대학 링크</h5>
+              <button type="button" class="btn btn-sm btn-outline-primary" onclick="toggleUrlEdit()" id="urlEditBtn">수정</button>
+            </div>
+            <div id="urlView">
+              <div class="mb-2">
+                <div class="small text-muted">입학처</div>
+                <a href="<%= univ.admission_url || '#' %>" target="_blank" class="text-break"><%= univ.admission_url || '(미설정)' %></a>
+                <span id="admissionStatus" class="badge bg-secondary ms-1">확인중</span>
+              </div>
+              <div class="mb-2">
+                <div class="small text-muted">입학전형계획</div>
+                <a href="<%= univ.plan_url || '#' %>" target="_blank" class="text-break"><%= univ.plan_url || '(미설정)' %></a>
+                <span id="planStatus" class="badge bg-secondary ms-1">확인중</span>
+              </div>
+              <div class="mb-2">
+                <div class="small text-muted">입결내역</div>
+                <a href="<%= univ.cutoff_url || '#' %>" target="_blank" class="text-break"><%= univ.cutoff_url || '(미설정)' %></a>
+                <span id="cutoffUrlStatus" class="badge bg-secondary ms-1">확인중</span>
+              </div>
+            </div>
+            <div id="urlEdit" style="display:none">
+              <div class="mb-2">
+                <label class="form-label small">입학처 URL</label>
+                <input type="url" name="admission_url" class="form-control form-control-sm" value="<%= univ.admission_url || '' %>" placeholder="https://...">
+                <span id="admissionStatusEdit" class="badge bg-secondary mt-1">확인중</span>
+              </div>
+              <div class="mb-2">
+                <label class="form-label small">입학전형계획 URL</label>
+                <input type="url" name="plan_url" class="form-control form-control-sm" value="<%= univ.plan_url || '' %>" placeholder="https://...">
+                <span id="planStatusEdit" class="badge bg-secondary mt-1">확인중</span>
+              </div>
+              <div class="mb-2">
+                <label class="form-label small">입결내역 URL</label>
+                <input type="url" name="cutoff_url" class="form-control form-control-sm" value="<%= univ.cutoff_url || '' %>" placeholder="https://...">
+                <span id="cutoffStatusEdit" class="badge bg-secondary mt-1">확인중</span>
+              </div>
+              <button type="button" class="btn btn-sm btn-success mt-2 w-100" onclick="saveUrls()">URL 저장</button>
+              <div class="small text-muted mt-1">URL 저장 버튼으로 URL만 저장됩니다</div>
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-secondary mt-2" onclick="checkUrls()">URL 상태 확인</button>
+
+            <hr>
+            <h6 class="fw-bold mb-2">입학전형계획 PDF</h6>
+            <div class="mb-2">
+              <input type="file" id="planPdfInput" accept=".pdf" class="form-control form-control-sm">
+            </div>
+            <div id="pdfStatus" class="small mb-2 fw-semibold"></div>
+            <div class="d-flex gap-2">
+              <button type="button" class="btn btn-sm btn-outline-primary" onclick="uploadPdf()" id="uploadBtn">PDF 업로드</button>
+              <button type="button" class="btn btn-sm btn-success" onclick="analyzePdf()" id="analyzeBtn" disabled>분석 및 반영</button>
+            </div>
+
+            <hr>
+            <h6 class="fw-bold mb-2">입결내역 (XLSX)</h6>
+            <div class="mb-2">
+              <input type="file" id="cutoffFileInput" accept=".xlsx,.xls" class="form-control form-control-sm">
+            </div>
+            <div id="cutoffStatus" class="small mb-2 fw-semibold"></div>
+            <div class="d-flex gap-2">
+              <button type="button" class="btn btn-sm btn-outline-primary" onclick="uploadCutoffFile()" id="uploadCutoffBtn">업로드</button>
+              <button type="button" class="btn btn-sm btn-success" onclick="analyzeCutoffFile()" id="analyzeCutoffBtn" disabled>분석 및 합격컷 반영</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card shadow-sm mb-4">
+          <div class="card-body">
+            <h5 class="section-title">학생부 카테고리 가중치</h5>
+            <p class="small text-muted">6개 항목의 가중치를 설정하세요 (합계 1.0)</p>
+            <% 
+              var catLabels = {academic_competency:'학업역량', learning_attitude:'학습태도', career_competency:'진로역량', career_exploration:'진로탐색활동', character:'인성', leadership:'리더십'};
+              var currentWeights = univ.category_weights || defaultWeights;
+            %>
+            <table class="table table-sm">
+              <% for (var key in defaultWeights) { %>
+                <tr>
+                  <td class="small"><%= catLabels[key] || key %></td>
+                  <td>
+                    <input type="number" name="cw_<%= key %>" class="form-control form-control-sm" min="0" max="1" step="0.05" value="<%= (currentWeights[key] || 0).toFixed(2) %>">
+                  </td>
+                </tr>
+              <% } %>
+            </table>
+          </div>
+        </div>
+
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="section-title">수시 기준 사용 팁</h5>
+            <ul class="small mb-0">
+              <li class="mb-1"><strong>내신/학생부 가중치</strong>는 각 대학의 수시 모집요강을 참고하세요</li>
+              <li class="mb-1"><strong>합격컷</strong>은 최근 수시 입시 결과를 바탕으로 설정</li>
+              <li class="mb-1"><strong>URL 확인</strong> 버튼으로 링크가 유효한지 체크</li>
+              <li>입학처/수시 모집요강 페이지에서 실제 기준을 확인한 후 입력하세요</li>
+            </ul>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function addDepartment() {
+      const list = document.getElementById('deptList')
+      const idx = list.children.length + 1
+      const div = document.createElement('div')
+      div.className = 'dept-entry p-3 mb-3'
+      var currentAdmissionType = '<%= admissionType %>'
+      div.innerHTML = `
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <h6 class="fw-bold mb-0">학과 #<%= "${idx}" %></h6>
+          <button type="button" class="btn btn-sm btn-outline-danger" onclick="this.closest('.dept-entry').remove()">삭제</button>
+        </div>
+        <div class="row g-2">
+          <div class="col-md-12 mb-2">
+            <label class="form-label small">학과명</label>
+            <input type="text" name="dept[name]" class="form-control form-control-sm" placeholder="예: 컴퓨터공학과" required>
+            <input type="hidden" name="dept[admission_type]" value="<%= "${currentAdmissionType}" %>">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small">내신 가중치</label>
+            <input type="number" name="dept[gpa_weight]" class="form-control form-control-sm" min="0" max="1" step="0.05" value="0.5" required>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small">학생부 가중치</label>
+            <input type="number" name="dept[record_weight]" class="form-control form-control-sm" min="0" max="1" step="0.05" value="0.5" required>
+          </div>
+          <div class="col-md-4">
+            ${currentAdmissionType === '교과'
+              ? '<label class="form-label small">합격컷 (1~9등급)</label><input type="number" name="dept[cutoff_score]" class="form-control form-control-sm" min="1" max="9" step="0.01" value="2.5" required>'
+              : '<label class="form-label small">합격컷 (0~100)</label><input type="number" name="dept[cutoff_score]" class="form-control form-control-sm" min="0" max="100" step="0.5" value="75" required>'
+            }
+          </div>
+        </div>
+        ${currentAdmissionType === '교과'
+          ? '<div class="form-check mt-2"><input type="checkbox" class="form-check-input" name="dept[no_record]" value="1" id="nr_new_' + idx + '" checked onchange="toggleNoRecord(this)"><label class="form-check-label small" for="nr_new_' + idx + '">학생부 평가 미반영 (내신 100% 반영)</label></div>'
+          : ''
+        }
+        <div class="small text-muted mt-1">내신+학생부 가중치 합 = 1.0 (1.0이 되어야 함)</div>
+      `
+      list.appendChild(div)
+      // Apply no_record defaults for 교과
+      if (currentAdmissionType === '교과') {
+        const entry = list.lastElementChild
+        if (entry) toggleNoRecord(entry.querySelector('.form-check-input'))
+      }
+    }
+
+    function toggleNoRecord(cb) {
+      const entry = cb.closest('.dept-entry')
+      if (!entry) return
+      const gpa = entry.querySelector('input[name="dept[gpa_weight]"]')
+      const rec = entry.querySelector('input[name="dept[record_weight]"]')
+      if (!gpa || !rec) return
+      if (cb.checked) {
+        gpa.value = '1'
+        rec.value = '0'
+        gpa.disabled = true
+        rec.disabled = true
+      } else {
+        gpa.value = '0.5'
+        rec.value = '0.5'
+        gpa.disabled = false
+        rec.disabled = false
+      }
+      updateWeightSum(entry)
+    }
+
+    function updateWeightSum(entry) {
+      const gpa = entry.querySelector('input[name="dept[gpa_weight]"]')
+      const rec = entry.querySelector('input[name="dept[record_weight]"]')
+      const sumEl = entry.querySelector('.small.text-muted.mt-1')
+      if (gpa && rec && sumEl) {
+        const sum = (parseFloat(gpa.value) || 0) + (parseFloat(rec.value) || 0)
+        sumEl.textContent = '내신+학생부 가중치 합 = ' + sum.toFixed(1) + ' (1.0이 되어야 함)'
+      }
+    }
+
+    function toggleUrlEdit() {
+      const view = document.getElementById('urlView')
+      const edit = document.getElementById('urlEdit')
+      const btn = document.getElementById('urlEditBtn')
+      if (edit.style.display === 'none') {
+        view.style.display = 'none'
+        edit.style.display = 'block'
+        btn.textContent = '보기'
+      } else {
+        // Sync edited values back to view mode
+        const inputs = edit.querySelectorAll('input')
+        const links = view.querySelectorAll('a')
+        inputs.forEach(function(inp, i) {
+          if (links[i]) {
+            links[i].href = inp.value || '#'
+            links[i].textContent = inp.value || '(미설정)'
+          }
+        })
+        view.style.display = 'block'
+        edit.style.display = 'none'
+        btn.textContent = '수정'
+      }
+    }
+
+    async function checkUrls() {
+      const badges = [
+        document.getElementById('admissionStatus'),
+        document.getElementById('admissionStatusEdit'),
+        document.getElementById('planStatus'),
+        document.getElementById('planStatusEdit'),
+        document.getElementById('cutoffUrlStatus'),
+        document.getElementById('cutoffStatusEdit')
+      ].filter(Boolean)
+      badges.forEach(b => { b.textContent = '확인중...'; b.className = 'badge bg-secondary ms-1' })
+      try {
+        const res = await fetch('/admin/<%= univ.id %>/check-url')
+        const data = await res.json()
+        const setBadge = (id, result) => {
+          const els = [document.getElementById(id), document.getElementById(id + 'Edit')].filter(Boolean)
+          els.forEach(el => {
+            if (!el) return
+            el.textContent = result.success ? '정상' : '오류'
+            el.className = 'badge ' + (result.success ? 'bg-success' : 'bg-danger') + ' ms-1'
+          })
+        }
+        if (data.admission_url) setBadge('admissionStatus', data.admission_url)
+        if (data.plan_url) setBadge('planStatus', data.plan_url)
+        if (data.cutoff_url) setBadge('cutoffUrlStatus', data.cutoff_url)
+      } catch (e) {
+        badges.forEach(b => { b.textContent = '오류'; b.className = 'badge bg-danger ms-1' })
+      }
+    }
+    function submitForm(form) {
+      const btn = form.querySelector('.btn-primary')
+      if (!btn) return
+      btn.disabled = true; btn.textContent = '저장 중...'
+      fetch(form.action, { method: 'POST', body: new URLSearchParams(new FormData(form)) }).then(function(res) {
+        if (res.ok) {
+          showToast('저장되었습니다.', 'success')
+        } else {
+          showToast('저장 실패: 서버 오류', 'error')
+        }
+      }).catch(function(e) {
+        showToast('저장 중 오류: ' + e.message, 'error')
+      }).finally(function() {
+        btn.disabled = false; btn.textContent = '저장하기'
+      })
+    }
+
+    async function saveUrls() {
+      const btn = document.querySelector('#urlEdit button.btn-success')
+      if (btn) { btn.disabled = true; btn.textContent = '저장 중...' }
+      try {
+        const res = await fetch('/admin/<%= univ.id %>/save-urls', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            admission_url: document.querySelector('input[name=\"admission_url\"]').value,
+            plan_url: document.querySelector('input[name=\"plan_url\"]').value,
+            cutoff_url: document.querySelector('input[name=\"cutoff_url\"]').value
+          })
+        })
+        const data = await res.json()
+        if (data.success) {
+          // Update view mode links
+          const links = document.querySelectorAll('#urlView a')
+          const vals = [
+            document.querySelector('input[name=\"admission_url\"]').value,
+            document.querySelector('input[name=\"plan_url\"]').value,
+            document.querySelector('input[name=\"cutoff_url\"]').value
+          ]
+          links.forEach(function(link, i) {
+            if (vals[i] !== undefined) {
+              link.href = vals[i] || '#'
+              link.textContent = vals[i] || '(미설정)'
+            }
+          })
+          showToast('URL이 저장되었습니다.', 'success')
+        } else {
+          showToast('저장 실패: ' + (data.error || '알 수 없는 오류'), 'error')
+        }
+      } catch (e) {
+        showToast('저장 중 오류 발생: ' + e.message, 'error')
+      }
+      if (btn) { btn.disabled = false; btn.textContent = 'URL 저장' }
+    }
+    async function uploadPdf() {
+      const input = document.getElementById('planPdfInput')
+      const status = document.getElementById('pdfStatus')
+      const uploadBtn = document.getElementById('uploadBtn')
+      const analyzeBtn = document.getElementById('analyzeBtn')
+      if (!input.files || !input.files[0]) {
+        status.innerHTML = '<span class="text-danger">파일을 선택하세요.</span>'
+        return
+      }
+      const formData = new FormData()
+      formData.append('plan_pdf', input.files[0])
+      status.innerHTML = '<span class="text-secondary">업로드 중...</span>'
+      uploadBtn.disabled = true
+      try {
+        const res = await fetch('/admin/<%= univ.id %>/upload-plan', { method: 'POST', body: formData })
+        const data = await res.json()
+        if (data.success) {
+          status.innerHTML = '<span class="text-success">업로드 완료</span>'
+          analyzeBtn.disabled = false
+        } else {
+          status.innerHTML = '<span class="text-danger">' + (data.error || '업로드 실패') + '</span>'
+        }
+      } catch (e) {
+        status.innerHTML = '<span class="text-danger">업로드 중 오류 발생</span>'
+      }
+      uploadBtn.disabled = false
+    }
+
+    async function analyzePdf() {
+      if (!confirm('분석 결과로 현재 학과 데이터를 덮어씁니다. 진행하시겠습니까?')) return
+      const status = document.getElementById('pdfStatus')
+      const analyzeBtn = document.getElementById('analyzeBtn')
+      status.innerHTML = '<span class="text-secondary">PDF 분석 중...</span>'
+      analyzeBtn.disabled = true
+      try {
+        const res = await fetch('/admin/<%= univ.id %>/analyze-plan', { method: 'POST' })
+        const data = await res.json()
+        if (data.success && data.departments && data.departments.length > 0) {
+          status.innerHTML = '<span class="text-success">' + data.totalFound + '개 학과 추출 완료. 저장하기 버튼을 눌러 저장하세요.</span>'
+          applyDepartments(data.departments)
+        } else if (data.success && (!data.departments || data.departments.length === 0)) {
+          status.innerHTML = '<span class="text-warning">학과 데이터를 추출할 수 없습니다. 직접 입력해주세요.</span>'
+        } else {
+          status.innerHTML = '<span class="text-danger">' + (data.error || '분석 실패') + '</span>'
+        }
+      } catch (e) {
+        status.innerHTML = '<span class="text-danger">분석 중 오류 발생</span>'
+      }
+      analyzeBtn.disabled = false
+    }
+
+    async function uploadCutoffFile() {
+      const input = document.getElementById('cutoffFileInput')
+      const status = document.getElementById('cutoffStatus')
+      const uploadBtn = document.getElementById('uploadCutoffBtn')
+      const analyzeBtn = document.getElementById('analyzeCutoffBtn')
+      if (!input.files || !input.files[0]) {
+        status.innerHTML = '<span class="text-danger">파일을 선택하세요.</span>'
+        return
+      }
+      const formData = new FormData()
+      formData.append('cutoff_file', input.files[0])
+      status.innerHTML = '<span class="text-secondary">업로드 중...</span>'
+      uploadBtn.disabled = true
+      try {
+        const res = await fetch('/admin/<%= univ.id %>/upload-cutoff', { method: 'POST', body: formData })
+        const data = await res.json()
+        if (data.success) {
+          status.innerHTML = '<span class="text-success">업로드 완료</span>'
+          analyzeBtn.disabled = false
+        } else {
+          status.innerHTML = '<span class="text-danger">' + (data.error || '업로드 실패') + '</span>'
+        }
+      } catch (e) {
+        status.innerHTML = '<span class="text-danger">업로드 중 오류 발생</span>'
+      }
+      uploadBtn.disabled = false
+    }
+
+    async function analyzeCutoffFile() {
+      if (!confirm('입결 데이터로 각 학과의 합격컷을 업데이트합니다. 진행하시겠습니까?')) return
+      const status = document.getElementById('cutoffStatus')
+      const analyzeBtn = document.getElementById('analyzeCutoffBtn')
+      status.innerHTML = '<span class="text-secondary">입결 데이터 분석 중...</span>'
+      analyzeBtn.disabled = true
+      try {
+        const res = await fetch('/admin/<%= univ.id %>/analyze-cutoff', { method: 'POST' })
+        const data = await res.json()
+        if (data.success && data.cutoffDepartments && data.cutoffDepartments.length > 0) {
+          const matched = data.cutoffDepartments.filter(d => d.matched).length
+          const msg = data.totalFound + '개 학과 합격컷 추출 완료'
+            + (data.totalUnmatched > 0 ? ' (' + data.totalUnmatched + '개 불일치)' : '')
+            + ' (' + data.year + '년 기준). 저장하기 버튼을 눌러 저장하세요.'
+          status.innerHTML = '<span class="text-success">' + msg + '</span>'
+          applyCutoffScores(data.cutoffDepartments)
+        } else if (data.success && data.cutoffDepartments && data.cutoffDepartments.length === 0) {
+          status.innerHTML = '<span class="text-warning">' + (data.error || '일치하는 데이터가 없습니다.') + '</span>'
+        } else {
+          status.innerHTML = '<span class="text-danger">' + (data.error || '분석 실패') + '</span>'
+        }
+      } catch (e) {
+        status.innerHTML = '<span class="text-danger">분석 중 오류 발생</span>'
+      }
+      analyzeBtn.disabled = false
+    }
+
+    function applyCutoffScores(cutoffDepartments) {
+      const entries = document.querySelectorAll('.dept-entry')
+      const cutoffMap = {}
+      cutoffDepartments.forEach(d => { cutoffMap[d.name] = d.cutoff_score })
+      entries.forEach(function(entry) {
+        const nameInput = entry.querySelector('input[name="dept[name]"]')
+        if (!nameInput) return
+        const cutoffInput = entry.querySelector('input[name="dept[cutoff_score]"]')
+        if (!cutoffInput) return
+        const score = cutoffMap[nameInput.value]
+        if (score !== undefined) {
+          cutoffInput.value = score
+        }
+      })
+    }
+
+    function applyDepartments(depts) {
+      const list = document.getElementById('deptList')
+      list.innerHTML = ''
+      depts.forEach(function(d, idx) {
+        const div = document.createElement('div')
+        div.className = 'dept-entry p-3 mb-3'
+        div.innerHTML = `
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <h6 class="fw-bold mb-0">학과 #${idx + 1}</h6>
+            <button type="button" class="btn btn-sm btn-outline-danger" onclick="this.closest('.dept-entry').remove()">삭제</button>
+          </div>
+          <div class="row g-2">
+            <div class="col-md-12 mb-2">
+              <label class="form-label small">학과명</label>
+              <input type="text" name="dept[name]" class="form-control form-control-sm" value="${d.name.replace(/</g, '&lt;')}" required>
+              <input type="hidden" name="dept[admission_type]" value="${d.admission_type || ''}">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small">내신 가중치</label>
+              <input type="number" name="dept[gpa_weight]" class="form-control form-control-sm" min="0" max="1" step="0.05" value="${d.gpa_weight}" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small">학생부 가중치</label>
+              <input type="number" name="dept[record_weight]" class="form-control form-control-sm" min="0" max="1" step="0.05" value="${d.record_weight}" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small">합격컷 (0~100)</label>
+              <input type="number" name="dept[cutoff_score]" class="form-control form-control-sm" min="0" max="100" step="0.5" value="${d.cutoff_score}" required>
+            </div>
+          </div>
+          <div class="small text-muted mt-1">내신+학생부 가중치 합 = ${(d.gpa_weight + d.record_weight).toFixed(1)} (1.0이 되어야 함)</div>
+        `
+        list.appendChild(div)
+      })
+    }
+
+    function toggleGuide() {
+      const c = document.getElementById('guideContent')
+      const t = document.getElementById('guideToggle')
+      const e = document.getElementById('guideEditBtn')
+      const isHidden = c.style.display === 'none'
+      c.style.display = isHidden ? 'block' : 'none'
+      t.textContent = isHidden ? '접기' : '펼치기'
+      if (isHidden) e.style.display = ''
+      else { e.style.display = 'none'; cancelEditGuide() }
+    }
+
+    function editGuide() {
+      const textarea = document.getElementById('guideTextarea')
+      const view = document.getElementById('guideView')
+      const edit = document.getElementById('guideEdit')
+      const btn = document.getElementById('guideEditBtn')
+      textarea.value = view.textContent === '등록된 가이드가 없습니다.' ? '' : view.textContent
+      view.style.display = 'none'
+      edit.style.display = 'block'
+      btn.style.display = 'none'
+      document.getElementById('guideSaveMsg').textContent = ''
+    }
+
+    function cancelEditGuide() {
+      document.getElementById('guideView').style.display = ''
+      document.getElementById('guideEdit').style.display = 'none'
+      document.getElementById('guideEditBtn').style.display = ''
+      document.getElementById('guideSaveMsg').textContent = ''
+    }
+
+    async function saveGuide() {
+      const textarea = document.getElementById('guideTextarea')
+      const msg = document.getElementById('guideSaveMsg')
+      const view = document.getElementById('guideView')
+      const edit = document.getElementById('guideEdit')
+      const btn = edit.querySelector('.btn-outline-primary')
+      btn.disabled = true; btn.textContent = '저장 중...'
+      try {
+        const res = await fetch('/admin/<%= univ.id %>/save-guide', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ admission_guide: textarea.value })
+        })
+        const data = await res.json()
+        if (data.success) {
+          view.textContent = textarea.value || '등록된 가이드가 없습니다.'
+          msg.textContent = '✓ 저장되었습니다.'
+          msg.className = 'small mt-1 text-success'
+          setTimeout(cancelEditGuide, 800)
+        } else {
+          msg.textContent = '✗ 저장 실패'
+          msg.className = 'small mt-1 text-danger'
+        }
+      } catch (e) {
+        msg.textContent = '✗ 오류: ' + e.message
+        msg.className = 'small mt-1 text-danger'
+      }
+      btn.disabled = false; btn.textContent = '가이드 저장'
+    }
+
+    function showToast(msg, type) {
+      let container = document.getElementById('toastContainer')
+      if (!container) { container = document.createElement('div'); container.id = 'toastContainer'; container.className = 'toast-container'; document.body.appendChild(container) }
+      const el = document.createElement('div')
+      el.className = 'toast-msg ' + (type || 'success')
+      el.textContent = msg
+      container.appendChild(el)
+      setTimeout(function() { el.remove() }, 3000)
+    }
+
+    // Initialize no_record toggles on page load
+    document.querySelectorAll('.form-check-input[name="dept[no_record]"]').forEach(function(cb) {
+      if (cb.checked) toggleNoRecord(cb)
+    })
+
+    checkUrls()
+  </script>
+</body>
+</html>

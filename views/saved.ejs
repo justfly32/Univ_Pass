@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Univ_Pass - 저장된 분석</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="fw-bold" style="font-size:1.8rem; color:var(--primary);">저장된 분석</h1>
+      <a href="/" class="btn btn-outline-primary btn-sm">새 분석</a>
+    </div>
+
+    <% if (list.length === 0) { %>
+      <div class="card shadow-sm">
+        <div class="card-body p-5 text-center text-muted">
+          <p class="mb-0">저장된 분석 결과가 없습니다.</p>
+          <a href="/" class="btn btn-primary mt-3">분석하기</a>
+        </div>
+      </div>
+    <% } else { %>
+      <div class="list-group">
+        <% list.forEach(function(item) { %>
+          <a href="/saved/<%= item.id %>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <div>
+              <div class="fw-bold"><%= item.name %></div>
+              <div class="small text-muted">
+                <%= new Date(item.createdAt).toLocaleString('ko-KR') %>
+                · <%= item.totalUnivs %>개 학과
+                <% if (item.deptQuery) { %>· <span class="text-primary"><%= item.deptQuery %></span> 필터<% } %>
+              </div>
+            </div>
+            <span class="badge bg-primary rounded-pill">보기 →</span>
+          </a>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</body>
+</html>
