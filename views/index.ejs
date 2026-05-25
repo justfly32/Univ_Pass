@@ -179,8 +179,8 @@
                       <% if (u.admission_url) { %>
                         <a href="<%= u.admission_url %>" target="_blank" class="text-decoration-none" style="font-size:0.8rem;">입학처</a>
                       <% } %>
-                      <% if (u.plan_url) { %>
-                        <a href="<%= u.plan_url %>" target="_blank" class="text-decoration-none" style="font-size:0.8rem;">전형계획</a>
+                      <% if (u.cutoff_url) { %>
+                        <a href="<%= u.cutoff_url %>" target="_blank" class="text-decoration-none" style="font-size:0.8rem;">입결내역</a>
                       <% } %>
                       <a href="/admin/<%= u.id %>" class="text-decoration-none" style="font-size:0.8rem;">편집</a>
                     </div>
@@ -189,6 +189,14 @@
               <% }) %>
             </div>
           </div>
+        </div>
+
+        <div class="text-center mt-3">
+          <small>
+            <a href="https://www.adiga.kr/ucp/uvt/uni/univView.do?menuId=PCUVTINF2000" target="_blank" class="text-decoration-none text-muted">
+              📋 대입정보포털(adiga) - 대학정보 바로가기
+            </a>
+          </small>
         </div>
       </div>
     </div>
