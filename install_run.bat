@@ -46,9 +46,10 @@ REM 실행
 echo [3/3] 서버 시작 중...
 echo.
 echo ============================================
-echo    http://localhost:3000 으로 접속하세요!
-echo    종료하려면 터미널에서 Ctrl+C 를 누르세요.
+echo    브라우저가 자동으로 열립니다!
+echo    종료하려면 Ctrl+C 를 누르세요.
 echo ============================================
 echo.
+start http://localhost:3000
 call npm start
 pause
