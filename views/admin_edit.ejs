@@ -72,11 +72,11 @@
               <div class="d-flex justify-content-between align-items-center mb-2" style="cursor:pointer" onclick="toggleGuide()">
                 <h5 class="section-title mb-0">판정 가이드</h5>
                 <span>
-                  <span id="guideEditBtn" class="badge bg-primary me-1" style="display:none;cursor:pointer" onclick="event.stopPropagation();editGuide()">수정</span>
-                  <span id="guideToggle" class="badge bg-secondary">펼치기</span>
+                  <span id="guideEditBtn" class="badge bg-primary me-1" style="cursor:pointer" onclick="event.stopPropagation();editGuide()">수정</span>
+                  <span id="guideToggle" class="badge bg-secondary">접기</span>
                 </span>
               </div>
-              <div id="guideContent" style="display:none">
+              <div id="guideContent" style="display:block">
                 <div id="guideView" class="small" style="white-space:pre-wrap;line-height:1.7"><%= univ.admission_guide || '등록된 가이드가 없습니다.' %></div>
                 <div id="guideEdit" style="display:none">
                   <textarea id="guideTextarea" class="form-control form-control-sm" rows="10" placeholder="이 대학의 수시 전형 평가 기준, 유의사항, 팁 등을 입력하세요."></textarea>
